@@ -1,0 +1,309 @@
+<!DOCTYPE html><html lang="en"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1440, initial-scale=1.0">
+  <title>MergeFlow — Review the right pull request first</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --deep-navy: #0B1326;
+      --navy: #14213D;
+      --navy-lift: #1B2B4D;
+      --cream: #F4EDE0;
+      --cream-deep: #E7DCC8;
+      --coral: #FF6B5B;
+    }
+
+    body {
+      font-family: 'Hanken Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--deep-navy);
+      color: var(--cream);
+      margin: 0;
+      padding: 0;
+      width: 1440px;
+      min-height: 100vh;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .font-mono-code {
+      font-family: 'IBM Plex Mono', monospace;
+    }
+
+    .hero-heading {
+      font-family: 'Hanken Grotesk', sans-serif;
+      font-weight: 300;
+      letter-spacing: -0.035em;
+      line-height: 0.98;
+      font-size: 88px;
+    }
+
+    /* Fluted glass vertical ribbing effect */
+    .fluted-glass-panel {
+      position: relative;
+      background: rgba(20, 33, 61, 0.35);
+      backdrop-filter: blur(28px);
+      -webkit-backdrop-filter: blur(28px);
+      border: 1px solid rgba(244, 237, 224, 0.08);
+      border-radius: 28px;
+      overflow: hidden;
+    }
+
+    .fluted-glass-texture {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.16;
+      background: repeating-linear-gradient(
+        90deg,
+        rgba(244, 237, 224, 0.28) 0px,
+        rgba(244, 237, 224, 0.28) 1.5px,
+        transparent 1.5px,
+        transparent 14px,
+        rgba(11, 19, 38, 0.4) 14px,
+        rgba(11, 19, 38, 0.4) 16px,
+        transparent 16px,
+        transparent 28px
+      );
+      mix-blend-mode: overlay;
+    }
+
+    /* Soft organic coral glow */
+    .coral-glow-bg {
+      position: absolute;
+      width: 480px;
+      height: 480px;
+      left: 12%;
+      top: 18%;
+      background: radial-gradient(circle, rgba(255, 107, 91, 0.48) 0%, rgba(255, 107, 91, 0.2) 42%, rgba(255, 107, 91, 0) 70%);
+      filter: blur(52px);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* Frosted glass card */
+    .pr-card {
+      background: rgba(11, 19, 38, 0.60);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 20px;
+      border: 1px solid rgba(244, 237, 224, 0.09);
+      box-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.5);
+    }
+  </style>
+</head>
+<body class="relative flex flex-col justify-between min-h-screen bg-[#0B1326] text-[#F4EDE0]">
+
+  <!-- Top Navigation: Centred Frosted Pill -->
+  <header class="w-full pt-8 pb-4 flex justify-center z-50">
+    <nav class="w-[1040px] h-[58px] px-5 rounded-full bg-[#14213D]/60 backdrop-blur-md border border-[#F4EDE0]/10 flex items-center justify-between shadow-lg">
+      <!-- Left: Mascot & MergeFlow wordmark -->
+      <div class="flex items-center space-x-3">
+        <!-- SVG recreation of MergeFlow mascot: geometric flowing merge icon / creature -->
+        <div class="w-7 h-7 rounded-[6px] bg-[#1B2B4D] border border-[#F4EDE0]/25"></div>
+        <span class="text-[17px] font-medium tracking-tight text-[#F4EDE0]">MergeFlow</span>
+      </div>
+
+      <!-- Centre: Links -->
+      <div class="flex items-center space-x-9 text-[15px] font-normal text-[#F4EDE0]/85">
+        <a href="#how-it-works" class="hover:text-[#F4EDE0] transition-colors">How it works</a>
+        <a href="#rules" class="hover:text-[#F4EDE0] transition-colors">Rules</a>
+        <a href="#contributors" class="hover:text-[#F4EDE0] transition-colors">Contributors</a>
+        <a href="#questions" class="hover:text-[#F4EDE0] transition-colors">Questions</a>
+      </div>
+
+      <!-- Right: Coral pill button with navy label -->
+      <a href="#install" class="h-9 px-5 rounded-full bg-[#FF6B5B] text-[#14213D] text-[14px] font-medium flex items-center justify-center hover:opacity-95 transition-opacity">
+        Install on GitHub
+      </a>
+    </nav>
+  </header>
+
+  <!-- Hero Content Area -->
+  <main class="w-[1440px] px-16 mx-auto pt-8 pb-14 flex-1 flex items-center">
+    <div class="w-full grid grid-cols-12 gap-8 items-center">
+      
+      <!-- Left half: Vertically centred text & CTAs -->
+      <div class="col-span-6 pr-6 flex flex-col justify-center">
+        <!-- 3-line cream headline -->
+        <h1 class="hero-heading text-[#F4EDE0] mb-7">
+          Review the right<br>
+          pull request<br>
+          first.
+        </h1>
+
+        <!-- 20px cream at 70% opacity body -->
+        <p class="text-[20px] text-[#F4EDE0]/70 font-normal leading-[1.48] max-w-[530px] mb-9">
+          MergeFlow ranks every open pull request and says why in one line, so the one that needs you is on top.
+        </p>
+
+        <!-- Two pill buttons -->
+        <div class="flex items-center space-x-4">
+          <!-- Coral fill, navy label -->
+          <a href="#install" class="h-[48px] px-7 rounded-full bg-[#FF6B5B] text-[#14213D] text-[16px] font-medium flex items-center justify-center hover:opacity-95 transition-all">
+            Install on GitHub
+          </a>
+          <!-- Cream outline, cream label -->
+          <a href="#demo" class="h-[48px] px-7 rounded-full border border-[#F4EDE0]/35 text-[#F4EDE0] text-[16px] font-normal flex items-center justify-center hover:bg-[#F4EDE0]/5 transition-all">
+            Open the live demo
+          </a>
+        </div>
+      </div>
+
+      <!-- Right half: Coral glow behind fluted reeded glass with frosted card -->
+      <div class="col-span-6 flex justify-end items-center relative">
+        
+        <!-- Fluted Glass Panel Container -->
+        <div class="fluted-glass-panel relative w-[600px] h-[610px] p-5 flex items-center justify-center">
+          
+          <!-- Soft Coral Glow behind the fluted glass -->
+          <div class="coral-glow-bg"></div>
+
+          <!-- Vertical fluted reeded texture -->
+          <div class="fluted-glass-texture"></div>
+
+          <!-- Frosted Card: 560px wide, deep navy 60% opacity, backdrop blur, 20px radius -->
+          <div class="pr-card relative z-10 w-[560px] p-6 text-[#F4EDE0]">
+            
+            <!-- Card Header: Title + count -->
+            <div class="flex items-center justify-between mb-5 px-1">
+              <div class="flex items-center space-x-2.5">
+                <span class="text-[17px] font-medium text-[#F4EDE0] tracking-tight">Open pull requests</span>
+                <span class="text-[13px] font-mono-code font-normal text-[#F4EDE0]/60 bg-[#14213D]/70 px-2 py-0.5 rounded-full border border-[#F4EDE0]/10">4</span>
+              </div>
+            </div>
+
+            <!-- Five rows -->
+            <div class="flex flex-col space-y-2.5">
+              
+              <!-- Row 1: Rank 1 (Coral chip, navy label, 3px coral left edge, Navy lift background) -->
+              <div class="bg-[#1B2B4D] rounded-[12px] p-3.5 border-l-[3px] border-l-[#FF6B5B] border border-y-[#F4EDE0]/10 border-r-[#F4EDE0]/10 flex flex-col justify-between">
+                <div class="flex items-center justify-between mb-1.5">
+                  <div class="flex items-center space-x-2.5">
+                    <span class="text-[13px] font-mono-code text-[#F4EDE0]/50 w-3.5">1</span>
+                    <span class="text-[15px] font-medium text-[#F4EDE0]">Fix race in token refresh</span>
+                    <span class="text-[13px] font-mono-code text-[#F4EDE0]/60">#4821</span>
+                  </div>
+                  <!-- Coral chip with navy label -->
+                  <span class="px-2.5 py-0.5 rounded-full bg-[#FF6B5B] text-[#14213D] text-[12px] font-medium">
+                    Review first
+                  </span>
+                </div>
+                <div class="pl-6 text-[13px] text-[#F4EDE0]/70 font-normal leading-relaxed">
+                  Changes auth code that 14 files depend on.
+                </div>
+              </div>
+
+              <!-- Row 2 -->
+              <div class="bg-[#14213D]/40 rounded-[12px] p-3.5 border border-[#F4EDE0]/8 flex flex-col justify-between">
+                <div class="flex items-center justify-between mb-1.5">
+                  <div class="flex items-center space-x-2.5">
+                    <span class="text-[13px] font-mono-code text-[#F4EDE0]/50 w-3.5">2</span>
+                    <span class="text-[15px] font-normal text-[#F4EDE0]">Add retry to webhook client</span>
+                    <span class="text-[13px] font-mono-code text-[#F4EDE0]/60">#4809</span>
+                  </div>
+                  <!-- Thin cream outline chip -->
+                  <span class="px-2.5 py-0.5 rounded-full border border-[#F4EDE0]/25 text-[#F4EDE0] text-[12px] font-normal">
+                    Standard
+                  </span>
+                </div>
+                <div class="pl-6 text-[13px] text-[#F4EDE0]/70 font-normal leading-relaxed">
+                  One module touched, tests added.
+                </div>
+              </div>
+
+              <!-- Row 3 -->
+              <div class="bg-[#14213D]/40 rounded-[12px] p-3.5 border border-[#F4EDE0]/8 flex flex-col justify-between">
+                <div class="flex items-center justify-between mb-1.5">
+                  <div class="flex items-center space-x-2.5">
+                    <span class="text-[13px] font-mono-code text-[#F4EDE0]/50 w-3.5">3</span>
+                    <span class="text-[15px] font-normal text-[#F4EDE0]">Support Windows paths</span>
+                    <span class="text-[13px] font-mono-code text-[#F4EDE0]/60">#4802</span>
+                  </div>
+                  <!-- Thin cream outline chip -->
+                  <span class="px-2.5 py-0.5 rounded-full border border-[#F4EDE0]/25 text-[#F4EDE0] text-[12px] font-normal">
+                    Needs info
+                  </span>
+                </div>
+                <div class="pl-6 text-[13px] text-[#F4EDE0]/70 font-normal leading-relaxed">
+                  No linked issue and no tests.
+                </div>
+              </div>
+
+              <!-- Row 4 -->
+              <div class="bg-[#14213D]/40 rounded-[12px] p-3.5 border border-[#F4EDE0]/8 flex flex-col justify-between">
+                <div class="flex items-center justify-between mb-1.5">
+                  <div class="flex items-center space-x-2.5">
+                    <span class="text-[13px] font-mono-code text-[#F4EDE0]/50 w-3.5">4</span>
+                    <span class="text-[15px] font-normal text-[#F4EDE0]">Fix typo in README</span>
+                    <span class="text-[13px] font-mono-code text-[#F4EDE0]/60">#4817</span>
+                  </div>
+                  <!-- Thin cream outline chip -->
+                  <span class="px-2.5 py-0.5 rounded-full border border-[#F4EDE0]/25 text-[#F4EDE0] text-[12px] font-normal">
+                    Likely low effort
+                  </span>
+                </div>
+                <div class="pl-6 text-[13px] text-[#F4EDE0]/70 font-normal leading-relaxed">
+                  Docs only, nothing depends on it.
+                </div>
+              </div>
+
+              <!-- Row 5 -->
+              
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Bottom: Five facts across full width separated by thin hairlines -->
+  <footer class="w-full border-t border-[#F4EDE0]/10 bg-[#0B1326] z-20">
+    <div class="w-[1440px] px-16 mx-auto">
+      <div class="grid grid-cols-5 divide-x divide-[#F4EDE0]/10 py-7">
+        
+        <!-- Fact 1 -->
+        <div class="pr-5">
+          <div class="text-[15px] text-[#F4EDE0] font-normal mb-1 tracking-tight">Shadow mode by default</div>
+          <div class="text-[13px] text-[#F4EDE0]/70 font-normal leading-snug">Maintainers see the queue, contributors see nothing.</div>
+        </div>
+
+        <!-- Fact 2 -->
+        <div class="px-5">
+          <div class="text-[15px] text-[#F4EDE0] font-normal mb-1 tracking-tight">One reason per pull request</div>
+          <div class="text-[13px] text-[#F4EDE0]/70 font-normal leading-snug">A line you can read at a glance.</div>
+        </div>
+
+        <!-- Fact 3 -->
+        <div class="px-5">
+          <div class="text-[15px] text-[#F4EDE0] font-normal mb-1 tracking-tight">Your rules and weights</div>
+          <div class="text-[13px] text-[#F4EDE0]/70 font-normal leading-snug">Start from a preset and replay it on closed pull requests.</div>
+        </div>
+
+        <!-- Fact 4 -->
+        <div class="px-5">
+          <div class="text-[15px] text-[#F4EDE0] font-normal mb-1 tracking-tight">Never closes or merges</div>
+          <div class="text-[13px] text-[#F4EDE0]/70 font-normal leading-snug">You make every call.</div>
+        </div>
+
+        <!-- Fact 5 -->
+        <div class="pl-5">
+          <div class="text-[15px] text-[#F4EDE0] font-normal mb-1 tracking-tight">No source code stored</div>
+          <div class="text-[13px] text-[#F4EDE0]/70 font-normal leading-snug">Only file and symbol names.</div>
+        </div>
+
+      </div>
+    </div>
+  </footer>
+
+
+
+
+
+</body></html>

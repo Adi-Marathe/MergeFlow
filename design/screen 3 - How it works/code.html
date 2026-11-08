@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1440, initial-scale=1.0">
+<title>MergeFlow — Screen 3: How it works</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  body {
+    background-color: #14213D;
+    color: #F4EDE0;
+    font-family: 'Hanken Grotesk', -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .font-mono {
+    font-family: 'IBM Plex Mono', monospace;
+  }
+  .screen-band {
+    width: 1440px;
+    margin: 0 auto;
+    background-color: #14213D;
+    padding: 130px 100px 140px 100px;
+    display: grid;
+    grid-template-columns: 1.05fr 0.95fr;
+    gap: 80px;
+    align-items: center;
+  }
+
+  /* Left Column: Heading and 4 Stages */
+  .left-col {
+    display: flex;
+    flex-direction: column;
+  }
+  .section-headline {
+    font-size: 60px;
+    font-weight: 300;
+    line-height: 1.05;
+    letter-spacing: -0.035em;
+    color: #F4EDE0;
+    margin-bottom: 64px;
+    max-width: 580px;
+  }
+  .stages-list {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+  .stage-item {
+    font-size: 36px;
+    font-weight: 300;
+    line-height: 1.15;
+    letter-spacing: -0.025em;
+    color: #F4EDE0;
+  }
+  .stage-dimmed {
+    opacity: 0.35;
+  }
+  .stage-active {
+    opacity: 1;
+  }
+  .stage-subline {
+    margin-top: 10px;
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 1.4;
+    letter-spacing: -0.01em;
+    color: rgba(244, 237, 224, 0.70);
+    max-width: 500px;
+  }
+
+  /* Right Column: Navy Lift Card with Impact Graph */
+  .right-col {
+    display: flex;
+    justify-content: flex-end;
+  }
+  .impact-card {
+    width: 560px;
+    background-color: #1B2B4D;
+    border-radius: 20px;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 20px 48px rgba(11, 19, 38, 0.35);
+  }
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding-bottom: 24px;
+    border-bottom: 1px solid rgba(244, 237, 224, 0.12);
+    margin-bottom: 32px;
+  }
+  .card-title {
+    font-size: 22px;
+    font-weight: 400;
+    color: #F4EDE0;
+    letter-spacing: -0.015em;
+  }
+  .card-pr {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 18px;
+    color: rgba(244, 237, 224, 0.55);
+    font-weight: 400;
+  }
+
+  /* SVG Graph Area */
+  .graph-wrapper {
+    width: 100%;
+    height: 300px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .graph-svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+
+  .card-footer {
+    padding-top: 24px;
+    border-top: 1px solid rgba(244, 237, 224, 0.12);
+    margin-top: 16px;
+  }
+  .quiet-line {
+    font-size: 16px;
+    color: rgba(244, 237, 224, 0.70);
+    font-weight: 400;
+    letter-spacing: -0.01em;
+  }
+  .quiet-line .mono-ref {
+    font-family: 'IBM Plex Mono', monospace;
+    color: #F4EDE0;
+  }
+</style>
+</head>
+<body>
+  <section class="screen-band">
+    <!-- Left Column: Stages -->
+    <div class="left-col">
+      <h2 class="section-headline">How a pull request gets its place in the queue.</h2>
+      
+      <div class="stages-list">
+        <div class="stage-item stage-dimmed">Reads the pull request</div>
+        <div class="stage-item stage-dimmed">Checks your rules</div>
+        <div class="stage-item stage-active">
+          Traces the graph. Finds which files and symbols depend on what changed.
+          <div class="stage-subline">Finds which files and symbols depend on what changed.</div>
+        </div>
+        <div class="stage-item stage-dimmed">Ranks it and says why</div>
+      </div>
+    </div>
+
+    <!-- Right Column: Navy Lift card with node and line diagram -->
+    <div class="right-col">
+      <div class="impact-card">
+        <div class="card-header">
+          <span class="card-title">Fix race in token refresh</span>
+          <span class="card-pr font-mono">#4821</span>
+        </div>
+
+        <div class="graph-wrapper">
+          <svg class="graph-svg" viewBox="0 0 480 290" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Connecting lines in thin cream -->
+            <!-- Lines to upper dependents -->
+            <line x1="240" y1="145" x2="80" y2="60" stroke="#F4EDE0" stroke-opacity="0.35" stroke-width="1.2" stroke-dasharray="3 3"/>
+            <line x1="240" y1="145" x2="240" y2="45" stroke="#F4EDE0" stroke-opacity="0.45" stroke-width="1.2"/>
+            <line x1="240" y1="145" x2="400" y2="60" stroke="#F4EDE0" stroke-opacity="0.45" stroke-width="1.2"/>
+            <!-- Lines to lower outline nodes -->
+            <line x1="240" y1="145" x2="75" y2="230" stroke="#F4EDE0" stroke-opacity="0.25" stroke-width="1.2"/>
+            <line x1="240" y1="145" x2="240" y2="245" stroke="#F4EDE0" stroke-opacity="0.25" stroke-width="1.2"/>
+            <line x1="240" y1="145" x2="405" y2="230" stroke="#F4EDE0" stroke-opacity="0.25" stroke-width="1.2"/>
+
+            <!-- Node 1 (Top Left Dependent): api/session.ts - filled cream at 30% -->
+            <g transform="translate(80, 60)">
+              <rect x="-65" y="-18" width="130" height="36" rx="18" fill="#F4EDE0" fill-opacity="0.30" stroke="#F4EDE0" stroke-opacity="0.7" stroke-width="1"/>
+              <text x="0" y="4" text-anchor="middle" fill="#F4EDE0" font-family="'IBM Plex Mono', monospace" font-size="12" font-weight="500">api/session.ts</text>
+            </g>
+
+            <!-- Node 2 (Top Center Dependent): api/refresh.ts - filled cream at 30% -->
+            <g transform="translate(240, 45)">
+              <rect x="-65" y="-18" width="130" height="36" rx="18" fill="#F4EDE0" fill-opacity="0.30" stroke="#F4EDE0" stroke-opacity="0.7" stroke-width="1"/>
+              <text x="0" y="4" text-anchor="middle" fill="#F4EDE0" font-family="'IBM Plex Mono', monospace" font-size="12" font-weight="500">api/refresh.ts</text>
+            </g>
+
+            <!-- Node 3 (Top Right Dependent): middleware/auth.ts - filled cream at 30% -->
+            <g transform="translate(400, 60)">
+              <rect x="-75" y="-18" width="150" height="36" rx="18" fill="#F4EDE0" fill-opacity="0.30" stroke="#F4EDE0" stroke-opacity="0.7" stroke-width="1"/>
+              <text x="0" y="4" text-anchor="middle" fill="#F4EDE0" font-family="'IBM Plex Mono', monospace" font-size="12" font-weight="500">middleware/auth.ts</text>
+            </g>
+
+            <!-- Center Node (Coral): auth/token.ts - needs you / changed node -->
+            <g transform="translate(240, 145)">
+              <circle cx="0" cy="0" r="42" fill="#FF6B5B"/>
+              <!-- Coral glow halo subtle -->
+              <circle cx="0" cy="0" r="50" stroke="#FF6B5B" stroke-opacity="0.25" stroke-width="2"/>
+              <text x="0" y="4" text-anchor="middle" fill="#14213D" font-family="'IBM Plex Mono', monospace" font-size="13" font-weight="600">auth/token.ts</text>
+            </g>
+
+            <!-- Node 4 (Bottom Left): test/token.test.ts - outline node -->
+            <g transform="translate(75, 230)">
+              <rect x="-68" y="-16" width="136" height="32" rx="16" fill="transparent" stroke="#F4EDE0" stroke-opacity="0.35" stroke-width="1"/>
+              <text x="0" y="4" text-anchor="middle" fill="rgba(244, 237, 224, 0.6)" font-family="'IBM Plex Mono', monospace" font-size="11">test/token.test.ts</text>
+            </g>
+
+            <!-- Node 5 (Bottom Center): config/jwt.ts - outline node -->
+            <g transform="translate(240, 245)">
+              <rect x="-55" y="-16" width="110" height="32" rx="16" fill="transparent" stroke="#F4EDE0" stroke-opacity="0.35" stroke-width="1"/>
+              <text x="0" y="4" text-anchor="middle" fill="rgba(244, 237, 224, 0.6)" font-family="'IBM Plex Mono', monospace" font-size="11">config/jwt.ts</text>
+            </g>
+
+            <!-- Node 6 (Bottom Right): models/user.ts - outline node -->
+            <g transform="translate(405, 230)">
+              <rect x="-58" y="-16" width="116" height="32" rx="16" fill="transparent" stroke="#F4EDE0" stroke-opacity="0.35" stroke-width="1"/>
+              <text x="0" y="4" text-anchor="middle" fill="rgba(244, 237, 224, 0.6)" font-family="'IBM Plex Mono', monospace" font-size="11">models/user.ts</text>
+            </g>
+          </svg>
+        </div>
+
+        <div class="card-footer">
+          <div class="quiet-line">Overlaps with <span class="mono-ref">#4809</span>.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+</body>
+</html>

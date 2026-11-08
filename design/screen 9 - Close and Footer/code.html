@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1440, initial-scale=1.0">
+<title>MergeFlow — Screen 9 of 9: Close and footer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@300;400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        'deep-navy': '#0B1326',
+        'navy': '#14213D',
+        'navy-lift': '#1B2B4D',
+        'cream': '#F4EDE0',
+        'cream-deep': '#E7DCC8',
+        'coral': '#FF6B5B',
+      },
+      fontFamily: {
+        sans: ['"Hanken Grotesk"', 'sans-serif'],
+        mono: ['"IBM Plex Mono"', 'monospace'],
+      }
+    }
+  }
+}
+</script>
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    background-color: #0B1326;
+    color: #F4EDE0;
+    font-family: 'Hanken Grotesk', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  .tight-heading {
+    letter-spacing: -0.04em;
+  }
+  .coral-glow {
+    position: absolute;
+    bottom: -160px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 900px;
+    height: 480px;
+    background: radial-gradient(ellipse 65% 55% at 50% 100%, rgba(255, 107, 91, 0.22) 0%, rgba(255, 107, 91, 0.08) 45%, rgba(11, 19, 38, 0) 80%);
+    pointer-events: none;
+    z-index: 1;
+  }
+</style>
+</head>
+<body class="w-[1440px] min-h-[960px] bg-[#0B1326] text-[#F4EDE0] flex flex-col justify-between relative box-border">
+
+  <!-- Coral Glow rising from bottom behind headline / CTA area -->
+  <div class="coral-glow"></div>
+
+  <!-- Hero Close Section -->
+  <div class="w-full flex-1 flex flex-col items-center justify-center px-[120px] pt-[140px] pb-[100px] relative z-10 text-center">
+    
+    <h1 class="text-[80px] leading-[1.08] font-[300] tight-heading text-[#F4EDE0] max-w-[1040px] mx-auto mb-[48px]">
+      Start with the pull request that needs you.
+    </h1>
+
+    <!-- Pill Buttons -->
+    <div class="flex items-center gap-[16px] justify-center">
+      <a href="#" class="inline-flex items-center justify-center px-[28px] py-[14px] rounded-full bg-[#FF6B5B] text-[#14213D] text-[16px] font-[500] leading-none transition-transform hover:scale-[1.02] active:scale-[0.98]">
+        Install on GitHub
+      </a>
+      <a href="#" class="inline-flex items-center justify-center px-[28px] py-[14px] rounded-full bg-transparent border border-[#F4EDE0] text-[#F4EDE0] text-[16px] font-[400] leading-none transition-transform hover:scale-[1.02] active:scale-[0.98]">
+        Open the live demo
+      </a>
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <footer class="w-full border-t border-[#F4EDE0]/15 px-[120px] py-[44px] relative z-10">
+    <div class="max-w-[1200px] w-full mx-auto flex flex-col gap-[16px]">
+      
+      <!-- Top Row: Mascot + Logo & Navigation Links -->
+      <div class="flex items-center justify-between">
+        
+        <!-- Left: Mascot and MergeFlow brand -->
+        <div class="flex items-center gap-[12px]">
+          <div class="w-[28px] h-[28px] rounded-full bg-[#1B2B4D] border border-[#F4EDE0]/30 flex items-center justify-center">
+            <!-- Minimal Geometric Mascot glyph: intersecting flow nodes -->
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="4.5" cy="4.5" r="2" stroke="#F4EDE0" stroke-width="1.2"/>
+              <circle cx="11.5" cy="4.5" r="2" stroke="#FF6B5B" stroke-width="1.2"/>
+              <circle cx="8" cy="11.5" r="2" stroke="#F4EDE0" stroke-width="1.2"/>
+              <path d="M4.5 6.5V8.5C4.5 9.5 5.5 10.5 6.5 10.5" stroke="#F4EDE0" stroke-width="1.2" stroke-linecap="round"/>
+              <path d="M11.5 6.5V8.5C11.5 9.5 10.5 10.5 9.5 10.5" stroke="#F4EDE0" stroke-width="1.2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <span class="text-[18px] font-[400] tracking-[-0.01em] text-[#F4EDE0]">MergeFlow</span>
+        </div>
+
+        <!-- Right: Links -->
+        <nav class="flex items-center gap-[32px]">
+          <a href="#" class="text-[15px] font-[400] text-[#F4EDE0] hover:text-white transition-colors">How it works</a>
+          <a href="#" class="text-[15px] font-[400] text-[#F4EDE0] hover:text-white transition-colors">Rules</a>
+          <a href="#" class="text-[15px] font-[400] text-[#F4EDE0] hover:text-white transition-colors">Contributors</a>
+          <a href="#" class="text-[15px] font-[400] text-[#F4EDE0] hover:text-white transition-colors">Questions</a>
+        </nav>
+
+      </div>
+
+      <!-- Bottom Row: Verification statement -->
+      <div class="flex justify-end">
+        <p class="text-[14px] leading-normal font-[400] text-[#F4EDE0]/70 m-0">
+          MergeFlow is a GitHub App. It never closes or merges a pull request.
+        </p>
+      </div>
+
+    </div>
+  </footer>
+
+</body>
+</html>
