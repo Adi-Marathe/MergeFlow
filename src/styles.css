@@ -309,22 +309,18 @@ p {
 }
 
 .hero-header {
-  width: min(1040px, calc(100% - 64px));
+  width: min(1312px, calc(100% - 128px));
   margin-inline: auto;
   position: relative;
   z-index: 2;
 }
 
 .hero-nav {
-  min-height: 58px;
-  display: flex;
+  min-height: 44px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   align-items: center;
-  justify-content: space-between;
-  gap: 24px;
-  padding: 0 20px;
-  border: 1px solid rgb(244 237 224 / 12%);
-  border-radius: 9999px;
-  background: var(--navy);
+  gap: 20px;
 }
 
 .brand,
@@ -342,6 +338,7 @@ p {
 
 .hero-nav .brand {
   min-height: 44px;
+  justify-self: start;
 }
 
 .brand img,
@@ -356,32 +353,42 @@ p {
   min-width: 0;
 }
 
+.hero-nav nav {
+  justify-self: center;
+  padding: 3px;
+  border: 1px solid rgb(244 237 224 / 14%);
+  border-radius: 9999px;
+  background: rgb(25 39 69 / 76%);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
 .nav-links {
   display: flex;
   align-items: center;
-  gap: 36px;
+  gap: 2px;
 }
 
 .nav-links a {
-  min-width: 44px;
-  min-height: 44px;
+  min-height: 34px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: rgb(244 237 224 / 88%);
-  font-size: 15px;
+  padding-inline: 11px;
+  border-radius: 9999px;
+  color: rgb(244 237 224 / 84%);
+  font-size: 12px;
   text-decoration: none;
 }
 
 .nav-links a:hover {
   color: var(--cream);
-  text-decoration: underline;
-  text-underline-offset: 4px;
+  background: rgb(244 237 224 / 10%);
 }
 
 .nav-cta {
   display: inline-flex;
-  min-height: 44px;
+  min-height: 40px;
   align-items: center;
   justify-content: center;
   flex: 0 0 auto;
@@ -389,9 +396,10 @@ p {
   border-radius: 9999px;
   background: var(--coral);
   color: var(--navy);
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
   text-decoration: none;
+  justify-self: end;
 }
 
 .nav-cta:hover,
@@ -485,44 +493,6 @@ p {
   isolation: isolate;
 }
 
-.hero-glass-stage {
-  width: min(600px, 100%);
-  overflow: hidden;
-  position: absolute;
-  inset: 0;
-  margin-inline: auto;
-  z-index: 0;
-  border-radius: 28px;
-  background:
-    radial-gradient(ellipse 58% 55% at 69% 48%, rgb(255 107 91 / 27%) 0%, rgb(255 107 91 / 9%) 43%, transparent 78%),
-    var(--deep-navy);
-  pointer-events: none;
-}
-
-.hero-glass-fallback {
-  position: absolute;
-  inset: -1px;
-  backdrop-filter: blur(28px);
-  -webkit-backdrop-filter: blur(28px);
-  background: repeating-linear-gradient(
-    90deg,
-    rgb(244 237 224 / 22%) 0 1.5px,
-    transparent 1.5px 14px,
-    rgb(11 19 38 / 45%) 14px 16px,
-    transparent 16px 28px
-  );
-  opacity: 0.56;
-}
-
-.hero-glass-canvas {
-  width: 100%;
-  height: 100%;
-  display: block;
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-}
-
 .glass-card {
   width: min(560px, 100%);
   padding: 24px;
@@ -534,6 +504,15 @@ p {
   -webkit-backdrop-filter: blur(20px);
   position: relative;
   z-index: 1;
+}
+
+.hero-queue {
+  transform-style: preserve-3d;
+  will-change: transform;
+  background:
+    radial-gradient(circle at var(--pointer-x, 50%) var(--pointer-y, 50%), rgb(255 107 91 / 12%), transparent 38%),
+    rgb(11 19 38 / 76%);
+  box-shadow: 0 24px 72px rgb(0 0 0 / 20%);
 }
 
 .hero-queue-heading {
@@ -1650,6 +1629,10 @@ p {
 }
 
 @media (max-width: 1100px) {
+  .hero-header {
+    width: min(100% - 64px, 960px);
+  }
+
   .band-inner {
     width: min(100% - 64px, 960px);
   }
@@ -1686,10 +1669,6 @@ p {
   .hero-visual {
     min-height: 0;
     justify-content: center;
-  }
-
-  .hero-glass-stage {
-    border-radius: var(--card-radius);
   }
 
   .facts-grid {
@@ -1753,31 +1732,31 @@ p {
 
   .hero-nav {
     min-height: auto;
-    flex-wrap: wrap;
-    gap: 14px;
-    padding: 14px 16px;
-    border-radius: 20px;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 8px 12px;
   }
 
   .hero-nav nav {
-    order: 3;
-    width: 100%;
+    grid-column: 1 / -1;
+    grid-row: 2;
+    justify-self: stretch;
   }
 
   .nav-links {
-    justify-content: space-between;
+    justify-content: center;
     flex-wrap: wrap;
-    gap: 8px 18px;
+    gap: 2px;
   }
 
   .nav-links a {
-    font-size: 14px;
+    min-height: 32px;
+    padding-inline: 8px;
+    font-size: 11px;
   }
 
   .nav-cta {
-    min-height: 44px;
-    margin-left: auto;
-    padding-inline: 14px;
+    min-height: 36px;
+    padding-inline: 12px;
     font-size: 13px;
   }
 
@@ -1814,10 +1793,6 @@ p {
   .hero-visual {
     min-height: 0;
     padding: 8px 0;
-  }
-
-  .hero-glass-stage {
-    border-radius: var(--card-radius);
   }
 
   .glass-card {
