@@ -220,7 +220,7 @@ export function usePageMotion() {
         gsap.set(heroRiseTargets, { y: 16 });
         gsap.set(heroQueueTargets, { y: 22 });
         gsap.set(heroQueueRows, { opacity: 0, y: 12 });
-        gsap.set(queue, { transformPerspective: 900, transformOrigin: "50% 50%", rotationX: 0, rotationY: 0 });
+        gsap.set(glass, { transformPerspective: 900, transformOrigin: "50% 50%", rotationX: 0, rotationY: 0 });
 
         gsap.set(panelNodes, { opacity: 0 });
         gsap.set(stageNodes, { opacity: 0.7 });
@@ -302,29 +302,24 @@ export function usePageMotion() {
           yoyo: true,
         });
 
-        const tiltX = gsap.quickTo(queue, "rotationX", { duration: 0.55, ease: "power2.out" });
-        const tiltY = gsap.quickTo(queue, "rotationY", { duration: 0.55, ease: "power2.out" });
+        const tiltX = gsap.quickTo(glass, "rotationX", { duration: 0.55, ease: "power2.out" });
+        const tiltY = gsap.quickTo(glass, "rotationY", { duration: 0.55, ease: "power2.out" });
         const pointerMove = (event: PointerEvent) => {
-          if (event.pointerType !== "mouse") return;
-          const bounds = queue.getBoundingClientRect();
+          const bounds = hero.getBoundingClientRect();
           if (bounds.width === 0 || bounds.height === 0) return;
-          const x = gsap.utils.clamp(0, 1, (event.clientX - bounds.left) / bounds.width);
-          const y = gsap.utils.clamp(0, 1, (event.clientY - bounds.top) / bounds.height);
-          tiltX(gsap.utils.clamp(-2.5, 2.5, (0.5 - y) * 5));
-          tiltY(gsap.utils.clamp(-2.5, 2.5, (x - 0.5) * 5));
-          queue.style.setProperty("--pointer-x", `${x * 100}%`);
-          queue.style.setProperty("--pointer-y", `${y * 100}%`);
+          const x = (event.clientX - bounds.left) / bounds.width - 0.5;
+          const y = (event.clientY - bounds.top) / bounds.height - 0.5;
+          tiltX(gsap.utils.clamp(-2.5, 2.5, -y * 5));
+          tiltY(gsap.utils.clamp(-2.5, 2.5, x * 5));
         };
         const pointerLeave = () => {
           tiltX(0);
           tiltY(0);
-          queue.style.setProperty("--pointer-x", "50%");
-          queue.style.setProperty("--pointer-y", "50%");
         };
         heroPointerMove = pointerMove;
         heroPointerLeave = pointerLeave;
-        queue.addEventListener("pointermove", pointerMove);
-        queue.addEventListener("pointerleave", pointerLeave);
+        hero.addEventListener("pointermove", pointerMove);
+        hero.addEventListener("pointerleave", pointerLeave);
 
         const exit = gsap.timeline({
           scrollTrigger: {
@@ -612,10 +607,8 @@ export function usePageMotion() {
 
         return () => {
           selectHowStage = undefined;
-          if (heroPointerMove) queue.removeEventListener("pointermove", heroPointerMove);
-          if (heroPointerLeave) queue.removeEventListener("pointerleave", heroPointerLeave);
-          queue.style.removeProperty("--pointer-x");
-          queue.style.removeProperty("--pointer-y");
+          if (heroPointerMove) hero.removeEventListener("pointermove", heroPointerMove);
+          if (heroPointerLeave) hero.removeEventListener("pointerleave", heroPointerLeave);
           if (heroQueuePointerEnter) queue.removeEventListener("pointerenter", heroQueuePointerEnter);
           if (heroQueuePointerLeave) queue.removeEventListener("pointerleave", heroQueuePointerLeave);
           if (heroQueueFocusIn) queue.removeEventListener("focusin", heroQueueFocusIn);
@@ -676,10 +669,8 @@ export function usePageMotion() {
         };
       } catch {
         selectHowStage = undefined;
-        if (heroPointerMove) queue.removeEventListener("pointermove", heroPointerMove);
-        if (heroPointerLeave) queue.removeEventListener("pointerleave", heroPointerLeave);
-        queue.style.removeProperty("--pointer-x");
-        queue.style.removeProperty("--pointer-y");
+        if (heroPointerMove) hero.removeEventListener("pointermove", heroPointerMove);
+        if (heroPointerLeave) hero.removeEventListener("pointerleave", heroPointerLeave);
         if (heroQueuePointerEnter) queue.removeEventListener("pointerenter", heroQueuePointerEnter);
         if (heroQueuePointerLeave) queue.removeEventListener("pointerleave", heroQueuePointerLeave);
         if (heroQueueFocusIn) queue.removeEventListener("focusin", heroQueueFocusIn);

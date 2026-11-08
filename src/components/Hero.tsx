@@ -1,10 +1,12 @@
 import { ACTION_URLS } from "../constants/urls";
 import { heroCopy, heroQueueItems, siteCopy } from "../data/content";
 import { Brand, NavigationLinks } from "./shared";
+import { HeroGlass } from "./HeroGlass";
 
 function HeroQueueCard() {
   return (
     <div className="hero-visual">
+      <HeroGlass />
       <section className="hero-queue glass-card" aria-label={heroCopy.queueLabel} tabIndex={0}>
         <div className="hero-queue-heading">
           <h2>{heroCopy.queueLabel}</h2>
