@@ -1,6 +1,6 @@
 import { heroQueueItems, howItWorksCopy, pullRequests } from "../data/content";
 
-function ImpactGraph() {
+export function ImpactGraph() {
   const center = { x: 240, y: 145 };
 
   return (

@@ -112,7 +112,9 @@ export function usePageMotion() {
     const navigation = page.querySelector<HTMLElement>(".hero-nav");
     const summary = page.querySelector<HTMLElement>(".hero-summary");
     const actions = [...page.querySelectorAll<HTMLElement>(".hero-actions .button")];
-    const queue = page.querySelector<HTMLElement>(".hero-queue");
+    const graphCard = page.querySelector<HTMLElement>(".hero-graph");
+    const queue = page.querySelector<HTMLElement>(".hero-queue") ?? graphCard;
+    const flipCard = page.querySelector<HTMLElement>(".hero-flip-card") ?? graphCard;
     const heroQueueRows = [...page.querySelectorAll<HTMLElement>(".hero-queue-row")];
     const glass = page.querySelector<HTMLElement>(".hero-glass-stage");
     const facts = page.querySelector<HTMLElement>(".facts-band");
@@ -133,7 +135,7 @@ export function usePageMotion() {
     const closeBand = page.querySelector<HTMLElement>(".close-band");
     const closeGlow = page.querySelector<HTMLElement>("[data-close-glow]");
 
-    if (!heroShell || !hero || !heroHeading || !navigation || !summary || !queue || !glass || !facts || !pile || !pileTrack || !howBand || !cardFlight || !pipelineCard || !pipelineVisual || !contributorBand || !contributorCheck || !contributorStatus || !contributorComment || !ledgerBand || ledgerItems.length !== 4 || ledgerCopies.length !== 4 || ledgerRules.length !== 4 || !closeBand || !closeGlow) return;
+    if (!heroShell || !hero || !heroHeading || !navigation || !summary || !queue || !flipCard || !glass || !facts || !pile || !pileTrack || !howBand || !cardFlight || !pipelineCard || !pipelineVisual || !contributorBand || !contributorCheck || !contributorStatus || !contributorComment || !ledgerBand || ledgerItems.length !== 4 || ledgerCopies.length !== 4 || ledgerRules.length !== 4 || !closeBand || !closeGlow) return;
 
     const media = gsap.matchMedia();
     let selectHowStage: ((index: number) => void) | undefined;
@@ -164,9 +166,9 @@ export function usePageMotion() {
     media.add("(prefers-reduced-motion: no-preference)", () => queueScrollTriggers(page));
 
     media.add("(prefers-reduced-motion: no-preference) and (min-width: 1024px)", () => {
-      const entranceTargets = present([navigation, summary, queue, glass, facts]);
+      const entranceTargets = present([navigation, summary, flipCard, glass, facts]);
       const heroRiseTargets = present([summary, ...actions]);
-      const heroQueueTargets = present([queue]);
+      const heroQueueTargets = present([flipCard]);
       const trackItems = [...pileTrack.querySelectorAll<HTMLElement>(".pile-items")];
       const firstTrackSet = trackItems[0];
       const headingMotion = animateHeadings(page);
@@ -210,7 +212,7 @@ export function usePageMotion() {
         const compactRow = pipelineCard.querySelector<HTMLElement>("[data-pipeline-compact]");
         const dockRows = [...pipelineVisual.querySelectorAll<HTMLElement>("[data-dock-row]")];
         const dockGlow = pipelineVisual.querySelector<HTMLElement>("[data-pipeline-glow]");
-        const heroTargets = present([heroShell, hero, heroHeading, navigation, summary, queue, glass, facts]);
+        const heroTargets = present([heroShell, hero, heroHeading, navigation, summary, queue, flipCard, glass, facts]);
 
         if (panelNodes.length !== 4 || stageNodes.length !== 4 || !firstTrackSet || !compactRow || !dockGlow) {
           throw new Error("The pipeline scene is missing required stage elements.");
@@ -220,7 +222,7 @@ export function usePageMotion() {
         gsap.set(heroRiseTargets, { y: 16 });
         gsap.set(heroQueueTargets, { y: 22 });
         gsap.set(heroQueueRows, { opacity: 0, y: 12 });
-        gsap.set(glass, { transformPerspective: 900, transformOrigin: "50% 50%", rotationX: 0, rotationY: 0 });
+        gsap.set(flipCard, { transformPerspective: 900, transformOrigin: "50% 50%", rotationX: 0, rotationY: 0 });
 
         gsap.set(panelNodes, { opacity: 0 });
         gsap.set(stageNodes, { opacity: 0.7 });
@@ -302,10 +304,10 @@ export function usePageMotion() {
           yoyo: true,
         });
 
-        const tiltX = gsap.quickTo(glass, "rotationX", { duration: 0.55, ease: "power2.out" });
-        const tiltY = gsap.quickTo(glass, "rotationY", { duration: 0.55, ease: "power2.out" });
+        const tiltX = gsap.quickTo(flipCard, "rotationX", { duration: 0.55, ease: "power2.out" });
+        const tiltY = gsap.quickTo(flipCard, "rotationY", { duration: 0.55, ease: "power2.out" });
         const pointerMove = (event: PointerEvent) => {
-          const bounds = hero.getBoundingClientRect();
+          const bounds = flipCard.getBoundingClientRect();
           if (bounds.width === 0 || bounds.height === 0) return;
           const x = (event.clientX - bounds.left) / bounds.width - 0.5;
           const y = (event.clientY - bounds.top) / bounds.height - 0.5;
@@ -318,8 +320,8 @@ export function usePageMotion() {
         };
         heroPointerMove = pointerMove;
         heroPointerLeave = pointerLeave;
-        hero.addEventListener("pointermove", pointerMove);
-        hero.addEventListener("pointerleave", pointerLeave);
+        flipCard.addEventListener("pointermove", pointerMove);
+        flipCard.addEventListener("pointerleave", pointerLeave);
 
         const exit = gsap.timeline({
           scrollTrigger: {
@@ -333,7 +335,6 @@ export function usePageMotion() {
 
         heroSplit = SplitText.create(heroHeading, {
           type: "lines",
-          mask: "lines",
           autoSplit: true,
           onSplit(self) {
             gsap.set(self.lines, { yPercent: 110, opacity: 0 });
@@ -344,6 +345,7 @@ export function usePageMotion() {
                 summary,
                 ...actions,
                 queue,
+                flipCard,
                 ...heroQueueRows,
                 facts,
               ])),
@@ -607,8 +609,8 @@ export function usePageMotion() {
 
         return () => {
           selectHowStage = undefined;
-          if (heroPointerMove) hero.removeEventListener("pointermove", heroPointerMove);
-          if (heroPointerLeave) hero.removeEventListener("pointerleave", heroPointerLeave);
+          if (heroPointerMove) flipCard.removeEventListener("pointermove", heroPointerMove);
+          if (heroPointerLeave) flipCard.removeEventListener("pointerleave", heroPointerLeave);
           if (heroQueuePointerEnter) queue.removeEventListener("pointerenter", heroQueuePointerEnter);
           if (heroQueuePointerLeave) queue.removeEventListener("pointerleave", heroQueuePointerLeave);
           if (heroQueueFocusIn) queue.removeEventListener("focusin", heroQueueFocusIn);
@@ -669,8 +671,8 @@ export function usePageMotion() {
         };
       } catch {
         selectHowStage = undefined;
-        if (heroPointerMove) hero.removeEventListener("pointermove", heroPointerMove);
-        if (heroPointerLeave) hero.removeEventListener("pointerleave", heroPointerLeave);
+        if (heroPointerMove) flipCard.removeEventListener("pointermove", heroPointerMove);
+        if (heroPointerLeave) flipCard.removeEventListener("pointerleave", heroPointerLeave);
         if (heroQueuePointerEnter) queue.removeEventListener("pointerenter", heroQueuePointerEnter);
         if (heroQueuePointerLeave) queue.removeEventListener("pointerleave", heroQueuePointerLeave);
         if (heroQueueFocusIn) queue.removeEventListener("focusin", heroQueueFocusIn);
@@ -708,6 +710,7 @@ export function usePageMotion() {
           summary,
           ...actions,
           queue,
+          flipCard,
           ...heroQueueRows,
           glass,
           facts,

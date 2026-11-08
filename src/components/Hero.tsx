@@ -1,34 +1,73 @@
+import { useEffect, useState } from "react";
+import { useRef } from "react";
+import type { ComponentType } from "react";
 import { ACTION_URLS } from "../constants/urls";
-import { heroCopy, heroQueueItems, siteCopy } from "../data/content";
+import { heroCopy, howItWorksCopy, siteCopy } from "../data/content";
 import { Brand, NavigationLinks } from "./shared";
 import { HeroGlass } from "./HeroGlass";
 
-function HeroQueueCard() {
+type HeroDependencyGraphProps = {
+  active: boolean;
+  onFocusChange: (label: string, connections: number) => void;
+};
+
+function HeroGraphCard() {
+  const graphCardRef = useRef<HTMLElement>(null);
+  const [isVisible, setIsVisible] = useState(true);
+  const [DependencyGraph, setDependencyGraph] = useState<ComponentType<HeroDependencyGraphProps> | null>(null);
+  const [graphLoadFailed, setGraphLoadFailed] = useState(false);
+  const [graphFocus, setGraphFocus] = useState({ label: howItWorksCopy.changedFile, connections: 6 });
+
+  useEffect(() => {
+    if (DependencyGraph) return;
+    let cancelled = false;
+
+    import("./HeroDependencyGraph").then(({ HeroDependencyGraph }) => {
+      if (!cancelled) setDependencyGraph(() => HeroDependencyGraph);
+    }).catch(() => {
+      if (!cancelled) setGraphLoadFailed(true);
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [DependencyGraph]);
+
+  useEffect(() => {
+    const graphCard = graphCardRef.current;
+    if (!graphCard) return;
+
+    const observer = new IntersectionObserver(([entry]) => {
+      setIsVisible(entry.isIntersecting);
+    }, { threshold: 0.05 });
+    observer.observe(graphCard);
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <div className="hero-visual">
       <HeroGlass />
-      <section className="hero-queue glass-card" aria-label={heroCopy.queueLabel} tabIndex={0}>
-        <div className="hero-queue-heading">
-          <h2>{heroCopy.queueLabel}</h2>
-          <span className="queue-count">{heroCopy.queueCount}</span>
+      <section className="hero-graph glass-card" ref={graphCardRef} aria-label="Pull request dependency graph">
+        <div className="hero-graph-heading">
+          <p className="pipeline-eyebrow mono">Code knowledge graph</p>
+          <h2>{howItWorksCopy.graphTitle}</h2>
+          <span className="mono">{howItWorksCopy.graphNumber}</span>
         </div>
-        <div className="hero-queue-list">
-          {heroQueueItems.map((item) => (
-            <article className={`hero-queue-row${item.priority ? " is-priority" : ""}`} data-hero-queue-row="true" key={item.number}>
-              <div className="hero-row-top">
-                <div className="hero-row-title">
-                  <span className="rank mono">{item.rank}</span>
-                  <h3>{item.title}</h3>
-                  <span className="mono pr-number">{item.number}</span>
-                </div>
-                <span className={item.priority ? "status-chip status-chip-coral" : "status-chip status-chip-outline"}>
-                  {item.status}
-                </span>
-              </div>
-              <p>{item.reason}</p>
-            </article>
-          ))}
+        <div className="hero-graph-wrap graph-wrap">
+          {DependencyGraph ? (
+            <DependencyGraph
+              active={isVisible}
+              onFocusChange={(label, connections) => setGraphFocus({ label, connections })}
+            />
+          ) : (
+            <div className="hero-graph-loading" role="status">
+              {graphLoadFailed ? "Dependency graph unavailable" : "Preparing dependency graph"}
+            </div>
+          )}
         </div>
+        <p className="hero-graph-caption">
+          <span className="mono">{graphFocus.label}</span> connects to {graphFocus.connections} related {graphFocus.connections === 1 ? "file" : "files"}.
+        </p>
       </section>
     </div>
   );
@@ -56,7 +95,7 @@ export function Hero() {
               <a className="button button-secondary" href={ACTION_URLS.demo}>{heroCopy.demoLabel}</a>
             </div>
           </div>
-          <HeroQueueCard />
+          <HeroGraphCard />
         </div>
       </section>
       <aside className="facts-band band-dark" aria-label={siteCopy.brand}>

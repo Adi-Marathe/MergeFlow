@@ -13,8 +13,8 @@ export const siteCopy = {
 };
 
 export const heroCopy = {
-  titleLines: ["Review the right", "pull request", "first."],
-  summary: "MergeFlow ranks every open pull request and says why in one line, so the one that needs you is on top.",
+  titleLines: ["AI-assisted pull", "request triage for", "open-source maintainers"],
+  summary: "For open-source maintainers, MergeFlow uses code knowledge graphs to connect each pull request to the files and systems it can affect.",
   installLabel: "Install on GitHub",
   demoLabel: "Open the live demo",
   queueLabel: "Open pull requests",
