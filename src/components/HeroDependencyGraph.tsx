@@ -248,9 +248,7 @@ export function HeroDependencyGraph({ active, onFocusChange }: HeroDependencyGra
 
   const linkParticles = useCallback((link: HeroGraphLinkObject) => {
     if (reduceMotion) return 0;
-    if (link.kind === "impact") return 1;
-    const source = endpointId(link.source);
-    return ["api/session.ts", "api/refresh.ts", "middleware/auth.ts", "config/jwt.ts"].includes(source) ? 1 : 0;
+    return link.kind === "impact" ? 1 : 0;
   }, [reduceMotion]);
 
   const paintPointerArea = useCallback((node: HeroGraphNodeObject, color: string, context: CanvasRenderingContext2D, scale: number) => {
@@ -307,9 +305,9 @@ export function HeroDependencyGraph({ active, onFocusChange }: HeroDependencyGra
           onNodeHover={handleNodeHover}
           onNodeClick={handleNodeClick}
           onEngineStop={handleEngineStop}
-          cooldownTicks={reduceMotion ? 72 : 180}
-          warmupTicks={reduceMotion ? 0 : 36}
-          d3AlphaDecay={reduceMotion ? 0.08 : 0.032}
+          cooldownTicks={reduceMotion ? 56 : 112}
+          warmupTicks={reduceMotion ? 0 : 18}
+          d3AlphaDecay={reduceMotion ? 0.1 : 0.06}
           d3VelocityDecay={0.36}
           minZoom={0.7}
           maxZoom={3.2}

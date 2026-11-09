@@ -1,6 +1,4 @@
-import { useEffect, useState } from "react";
-import { useRef } from "react";
-import type { ComponentType } from "react";
+import { useEffect, useRef, useState, type ComponentType, type PointerEvent as ReactPointerEvent } from "react";
 import { ACTION_URLS } from "../constants/urls";
 import { heroCopy, howItWorksCopy, siteCopy } from "../data/content";
 import { Brand, NavigationLinks } from "./shared";
@@ -13,25 +11,40 @@ type HeroDependencyGraphProps = {
 
 function HeroGraphCard() {
   const graphCardRef = useRef<HTMLElement>(null);
-  const [isVisible, setIsVisible] = useState(true);
+  const [isVisible, setIsVisible] = useState(false);
   const [DependencyGraph, setDependencyGraph] = useState<ComponentType<HeroDependencyGraphProps> | null>(null);
   const [graphLoadFailed, setGraphLoadFailed] = useState(false);
   const [graphFocus, setGraphFocus] = useState({ label: howItWorksCopy.changedFile, connections: 6 });
 
   useEffect(() => {
-    if (DependencyGraph) return;
     let cancelled = false;
+    let idleHandle: number | undefined;
+    let timeoutHandle: number | undefined;
 
-    import("./HeroDependencyGraph").then(({ HeroDependencyGraph }) => {
-      if (!cancelled) setDependencyGraph(() => HeroDependencyGraph);
-    }).catch(() => {
-      if (!cancelled) setGraphLoadFailed(true);
-    });
+    const idleWindow = window as Window & {
+      requestIdleCallback?: (callback: () => void, options?: { timeout: number }) => number;
+      cancelIdleCallback?: (handle: number) => void;
+    };
+    const loadGraph = () => {
+      import("./HeroDependencyGraph").then(({ HeroDependencyGraph }) => {
+        if (!cancelled) setDependencyGraph(() => HeroDependencyGraph);
+      }).catch(() => {
+        if (!cancelled) setGraphLoadFailed(true);
+      });
+    };
+
+    if (idleWindow.requestIdleCallback) {
+      idleHandle = idleWindow.requestIdleCallback(loadGraph, { timeout: 1400 });
+    } else {
+      timeoutHandle = window.setTimeout(loadGraph, 550);
+    }
 
     return () => {
       cancelled = true;
+      if (idleHandle !== undefined) idleWindow.cancelIdleCallback?.(idleHandle);
+      if (timeoutHandle !== undefined) window.clearTimeout(timeoutHandle);
     };
-  }, [DependencyGraph]);
+  }, []);
 
   useEffect(() => {
     const graphCard = graphCardRef.current;
@@ -73,10 +86,38 @@ function HeroGraphCard() {
   );
 }
 
+function moveHeroStarfield(event: ReactPointerEvent<HTMLElement>) {
+  if (event.pointerType !== "mouse") return;
+
+  const bounds = event.currentTarget.getBoundingClientRect();
+  const x = ((event.clientX - bounds.left) / bounds.width - 0.5) * 2;
+  const y = ((event.clientY - bounds.top) / bounds.height - 0.5) * 2;
+  const style = event.currentTarget.style;
+
+  style.setProperty("--star-far-x", `${(-x * 7).toFixed(1)}px`);
+  style.setProperty("--star-far-y", `${(-y * 5).toFixed(1)}px`);
+  style.setProperty("--star-near-x", `${(-x * 13).toFixed(1)}px`);
+  style.setProperty("--star-near-y", `${(-y * 9).toFixed(1)}px`);
+}
+
+function resetHeroStarfield(event: ReactPointerEvent<HTMLElement>) {
+  const style = event.currentTarget.style;
+  style.setProperty("--star-far-x", "0px");
+  style.setProperty("--star-far-y", "0px");
+  style.setProperty("--star-near-x", "0px");
+  style.setProperty("--star-near-y", "0px");
+}
+
 export function Hero() {
   return (
     <div className="hero-shell">
-      <section className="hero-band band-dark" id="top" aria-labelledby="hero-title">
+      <section
+        className="hero-band band-dark"
+        id="top"
+        aria-labelledby="hero-title"
+        onPointerMove={moveHeroStarfield}
+        onPointerLeave={resetHeroStarfield}
+      >
         <header className="hero-header">
           <div className="hero-nav">
             <Brand />

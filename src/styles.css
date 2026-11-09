@@ -306,6 +306,50 @@ p {
   overflow: hidden;
   padding-top: 32px;
   position: relative;
+  isolation: isolate;
+  background-image:
+    radial-gradient(ellipse 58% 48% at 76% 12%, rgb(50 78 139 / 17%), transparent 76%),
+    radial-gradient(ellipse 54% 62% at 7% 88%, rgb(255 107 91 / 6%), transparent 78%);
+}
+
+.hero-band::before,
+.hero-band::after {
+  position: absolute;
+  inset: -4%;
+  z-index: 0;
+  content: "";
+  pointer-events: none;
+  transition: translate 420ms ease-out;
+}
+
+.hero-band::before {
+  opacity: 0.74;
+  translate: var(--star-far-x, 0px) var(--star-far-y, 0px);
+  background: url("/hero-stars.svg") center / 100% 100% no-repeat;
+  animation: hero-star-drift 110s linear infinite;
+}
+
+.hero-band::after {
+  opacity: 0.4;
+  translate: var(--star-near-x, 0px) var(--star-near-y, 0px);
+  background-image:
+    radial-gradient(circle at 11% 49%, rgb(218 231 255 / 90%) 0 1.1px, transparent 2px),
+    radial-gradient(circle at 31% 26%, rgb(255 221 208 / 82%) 0 1px, transparent 1.9px),
+    radial-gradient(circle at 47% 73%, rgb(218 231 255 / 88%) 0 1.1px, transparent 2px),
+    radial-gradient(circle at 68% 24%, rgb(255 221 208 / 82%) 0 1px, transparent 1.9px),
+    radial-gradient(circle at 88% 59%, rgb(218 231 255 / 88%) 0 1.1px, transparent 2px),
+    radial-gradient(circle at 94% 14%, rgb(255 221 208 / 82%) 0 1px, transparent 1.9px);
+  animation: hero-star-twinkle 5.5s ease-in-out infinite alternate,
+    hero-star-drift 150s linear infinite reverse;
+}
+
+@keyframes hero-star-drift {
+  to { transform: translate3d(-24px, 30px, 0); }
+}
+
+@keyframes hero-star-twinkle {
+  from { opacity: 0.18; }
+  to { opacity: 0.58; }
 }
 
 .hero-header {
@@ -517,40 +561,14 @@ p {
 
 .hero-glass-stage {
   width: min(600px, 100%);
-  overflow: hidden;
   position: absolute;
   inset: 0;
   margin-inline: auto;
   z-index: 0;
-  border-radius: 28px;
   background:
-    radial-gradient(ellipse 58% 55% at 69% 48%, rgb(255 107 91 / 27%) 0%, rgb(255 107 91 / 9%) 43%, transparent 78%),
-    var(--deep-navy);
+    radial-gradient(ellipse 58% 55% at 69% 48%, rgb(255 107 91 / 12%) 0%, rgb(255 107 91 / 5%) 43%, transparent 78%),
+    radial-gradient(ellipse 70% 70% at 34% 54%, rgb(50 78 139 / 8%) 0%, transparent 78%);
   pointer-events: none;
-}
-
-.hero-glass-fallback {
-  position: absolute;
-  inset: -1px;
-  backdrop-filter: blur(28px);
-  -webkit-backdrop-filter: blur(28px);
-  background: repeating-linear-gradient(
-    90deg,
-    rgb(244 237 224 / 22%) 0 1.5px,
-    transparent 1.5px 14px,
-    rgb(11 19 38 / 45%) 14px 16px,
-    transparent 16px 28px
-  );
-  opacity: 0.56;
-}
-
-.hero-glass-canvas {
-  width: 100%;
-  height: 100%;
-  display: block;
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
 }
 
 .glass-card {
@@ -571,6 +589,9 @@ p {
   min-height: 480px;
   display: flex;
   flex-direction: column;
+  background: rgb(11 19 38 / 90%);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
 
 .hero-graph-heading {
@@ -652,6 +673,13 @@ p {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .hero-band::before,
+  .hero-band::after {
+    animation: none;
+    translate: none;
+    transition: none;
+  }
+
   .hero-graph-loading::before {
     animation: none;
   }
