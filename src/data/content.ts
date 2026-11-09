@@ -129,18 +129,18 @@ export const rulesQueueItems = [
 ];
 
 export const pileCopy = {
-  lead: "Pull requests arrive in the order they were opened. Maintainers need them in the order they matter.",
-  conclusion: "MergeFlow reads each one and puts the one that needs you on top.",
+  statement: "A diff shows what changed, not what depends on it. MergeFlow maps your repo at install, shows what each pull request affects, and puts the one that needs you on top.",
   items: [
-    { title: "Fix race in token refresh", number: "#4821" },
-    { title: "Add retry to webhook client", number: "#4809" },
-    { title: "Support Windows paths", number: "#4802" },
-    { title: "Fix typo in README", number: "#4817" },
-    { title: "Bump lodash", number: "#4796" },
-    { title: "Rename config keys", number: "#4790" },
-    { title: "Handle empty payloads", number: "#4781" },
-    { title: "Update CI matrix", number: "#4779" },
-    { title: "Allow custom headers", number: "#4772" },
+    "auth/token.ts",
+    "api/session.ts",
+    "api/refresh.ts",
+    "middleware/auth.ts",
+    "models/user.ts",
+    "config/jwt.ts",
+    "db/pool.ts",
+    "utils/retry.ts",
+    "test/token.test.ts",
+    "webhooks/client.ts",
   ],
 };
 

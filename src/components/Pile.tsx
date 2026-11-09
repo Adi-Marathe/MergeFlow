@@ -1,9 +1,9 @@
 import { pileCopy } from "../data/content";
 
 export function Pile() {
-  const items = (duplicate = false) => pileCopy.items.map((item, index) => (
-    <li className="pile-pill" key={`${duplicate ? "copy-" : ""}${item.number}-${index}`}>
-      <span>{item.title}</span><span className="mono">{item.number}</span>
+  const items = (duplicate = false) => pileCopy.items.map((path, index) => (
+    <li className="pile-pill" key={`${duplicate ? "copy-" : ""}${path}-${index}`}>
+      <span className="mono">{path}</span>
     </li>
   ));
 
@@ -11,7 +11,7 @@ export function Pile() {
     <section className="pile-band band-cream" aria-labelledby="pile-title">
       <div className="pile-inner band-inner">
         <h2 className="pile-statement" id="pile-title">
-          <span className="pile-lead">{pileCopy.lead}</span><span className="pile-conclusion">{pileCopy.conclusion}</span>
+          {pileCopy.statement}
         </h2>
         <div className="pile-rail">
           <div className="pile-track" data-pile-track="true">
